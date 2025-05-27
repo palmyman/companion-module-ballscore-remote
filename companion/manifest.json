@@ -1,16 +1,16 @@
 {
-	"id": "your-module-name",
-	"name": "your-module-name",
-	"shortname": "module-shortname",
-	"description": "A short one line description of your module",
+	"id": "ballscore-remote",
+	"name": "ballscore-remote",
+	"shortname": "ballscore-remote",
+	"description": "Ball Score remote for controling CG broadcast components",
 	"version": "0.0.0",
 	"license": "MIT",
-	"repository": "git+https://github.com/bitfocus/companion-module-your-module-name.git",
-	"bugs": "https://github.com/bitfocus/companion-module-your-module-name/issues",
+	"repository": "git+https://github.com/palmyman/companion-module-ballscore-remote.git",
+	"bugs": "https://github.com/palmyman/companion-module-ballscore-remote/issues",
 	"maintainers": [
 		{
-			"name": "Your name",
-			"email": "Your email"
+			"name": "Lubomír Čuhel",
+			"email": "cuhel@ballscore.app"
 		}
 	],
 	"runtime": {
@@ -20,7 +20,7 @@
 		"entrypoint": "../main.js"
 	},
 	"legacyIds": [],
-	"manufacturer": "Your company",
-	"products": ["Your product"],
+	"manufacturer": "Ball Score",
+	"products": ["Remote"],
 	"keywords": []
 }

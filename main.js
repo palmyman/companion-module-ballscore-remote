@@ -1,4 +1,4 @@
-const { InstanceBase, Regex, runEntrypoint, InstanceStatus } = require('@companion-module/base')
+const { InstanceBase, runEntrypoint, InstanceStatus } = require('@companion-module/base')
 const UpgradeScripts = require('./upgrades')
 const UpdateActions = require('./actions')
 const UpdateFeedbacks = require('./feedbacks')
@@ -31,18 +31,22 @@ class ModuleInstance extends InstanceBase {
 	getConfigFields() {
 		return [
 			{
+				id: 'broadcastUid',
 				type: 'textinput',
-				id: 'host',
-				label: 'Target IP',
+				label: 'Broadcast UID',
 				width: 8,
-				regex: Regex.IP,
+				regex: '[\w\d]{20}',
 			},
 			{
-				type: 'textinput',
-				id: 'port',
-				label: 'Target Port',
-				width: 4,
-				regex: Regex.PORT,
+				id: 'environment',
+				type: 'dropdown',
+				label: 'Environment',
+				choices: [
+					{ id: 'prod', label: 'Production' },
+					{ id: 'test', label: 'Test' },
+					{ id: 'dev', label: 'Development' },
+				],
+				default: 'dev',
 			},
 		]
 	}
