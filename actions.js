@@ -1,4 +1,9 @@
+const ApiService = require('./api-service');
+
 module.exports = function (self) {
+	// Create an instance of the ApiService with the module's config
+	const apiService = ApiService(self.config);
+
 	self.setActionDefinitions({
 		toggle_component: {
 			name: 'Toggle component',
@@ -23,7 +28,14 @@ module.exports = function (self) {
 				},
 			],
 			callback: async (event) => {
-				console.log('Hello world!', event.options.num);
+				try {
+					const result = await apiService.performAction('toggle_component', {
+						component: event.options.component
+					});
+					self.log('debug', `Toggle component result: ${JSON.stringify(result)}`);
+				} catch (error) {
+					self.log('error', `Error toggling component: ${error.message}`);
+				}
 			},
 		},
 		select_from_lineup: {
@@ -49,7 +61,15 @@ module.exports = function (self) {
 				},
 			],
 			callback: async (event) => {
-				console.log('Hello world!', event.options.num);
+				try {
+					const result = await apiService.performAction('select_from_lineup', {
+						team: event.options.team,
+						num: event.options.num
+					});
+					self.log('debug', `Select from lineup result: ${JSON.stringify(result)}`);
+				} catch (error) {
+					self.log('error', `Error selecting from lineup: ${error.message}`);
+				}
 			},
 		},
 	})

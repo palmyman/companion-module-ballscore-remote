@@ -1,6 +1,9 @@
 const { combineRgb } = require('@companion-module/base')
+const ApiService = require('./api-service')
 
 module.exports = async function (self) {
+	// Create an instance of the ApiService with the module's config
+	const apiService = ApiService(self.config);
 	self.setFeedbackDefinitions({
 		ChannelState: {
 			name: 'Example Feedback',
@@ -21,12 +24,21 @@ module.exports = async function (self) {
 				},
 			],
 			callback: (feedback) => {
-				console.log('Hello world!', feedback.options.num)
-				if (feedback.options.num > 5) {
-					return true
-				} else {
-					return false
+				// Log the API call (but don't await it since feedbacks need to return immediately)
+				try {
+					apiService.performAction('check_channel_state', {
+						num: feedback.options.num
+					}).then(result => {
+						self.log('debug', `Channel state check result: ${JSON.stringify(result)}`);
+					}).catch(error => {
+						self.log('error', `Error checking channel state: ${error.message}`);
+					});
+				} catch (error) {
+					self.log('error', `Error initiating channel state check: ${error.message}`);
 				}
+
+				// Return the boolean result based on the num value
+				return feedback.options.num > 5;
 			},
 		},
 	})

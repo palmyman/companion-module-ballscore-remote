@@ -35,7 +35,8 @@ class ModuleInstance extends InstanceBase {
 				type: 'textinput',
 				label: 'Broadcast UID',
 				width: 8,
-				regex: '[\w\d]{20}',
+				regex: '^[\w]{20}$',
+				required: true,
 			},
 			{
 				id: 'environment',
@@ -45,8 +46,9 @@ class ModuleInstance extends InstanceBase {
 					{ id: 'prod', label: 'Production' },
 					{ id: 'test', label: 'Test' },
 					{ id: 'dev', label: 'Development' },
+					{ id: 'local', label: 'Local' },
 				],
-				default: 'dev',
+				default: 'prod',
 			},
 		]
 	}
