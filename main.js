@@ -3,6 +3,7 @@ const UpgradeScripts = require('./upgrades')
 const UpdateActions = require('./actions')
 const UpdateFeedbacks = require('./feedbacks')
 const UpdateVariableDefinitions = require('./variables')
+const ApiService = require('./api-service')
 
 class ModuleInstance extends InstanceBase {
 	constructor(internal) {
@@ -12,7 +13,17 @@ class ModuleInstance extends InstanceBase {
 	async init(config) {
 		this.config = config
 
-		this.updateStatus(InstanceStatus.Ok)
+		this.updateStatus(InstanceStatus.Connecting)
+		this.apiService = ApiService(config);
+		this.log('debug', 'init')
+		this.apiService.getBroadcast().then(broadcast => {
+			this.broadcast = broadcast
+			this.log('debug', `Broadcast: ${broadcast.config.homeConfig.fullName} - ${broadcast.config.awayConfig.fullName}`)
+			this.updateStatus(InstanceStatus.Ok)
+		}).catch(error => {
+			this.log('error', `Error connecting to broadcast: ${error.message}`)
+			this.updateStatus(InstanceStatus.ConnectionFailure)
+		})
 
 		this.updateActions() // export actions
 		this.updateFeedbacks() // export feedbacks
@@ -25,6 +36,15 @@ class ModuleInstance extends InstanceBase {
 
 	async configUpdated(config) {
 		this.config = config
+
+		this.updateStatus(InstanceStatus.Connecting)
+		this.apiService = ApiService(config);
+		this.apiService.getBroadcast().then(broadcast => {
+			this.broadcast = broadcast
+			this.updateStatus(InstanceStatus.Ok)
+		}).catch(error => {
+			this.updateStatus(InstanceStatus.ConnectionFailure)
+		})
 	}
 
 	// Return config fields for web config

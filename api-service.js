@@ -1,38 +1,48 @@
+const axios = require('axios')
+
 class ApiService {
-    constructor(config) {
-        this.config = config;
-        this.broadcastUid = config.broadcastUid;
-        this.environment = config.environment;
-    }
+	constructor(config) {
+		this.broadcastUid = config.broadcastUid
+		switch (config.environment) {
+			case 'prod':
+				this.baseUrl = 'https://www.ballscore.app/api/v1'
+				break
+			case 'test':
+				this.baseUrl = 'https://test.ballscore.app/api/v1'
+				break
+			case 'dev':
+				this.baseUrl = 'https://dev.ballscore.app/api/v1'
+				break
+			case 'local':
+				this.baseUrl = 'http://localhost:4200/api/v1'
+		}
+	}
 
-    /**
-     * Dummy method that can be used by both actions and feedbacks
-     * @param {string} action - The action to perform
-     * @param {Object} params - Parameters for the action
-     * @returns {Promise<Object>} - The result of the action
-     */
-    async performAction(action, params = {}) {
-        console.log(`[API Service] Performing action: ${action}`);
-        console.log(`[API Service] Broadcast UID: ${this.broadcastUid}`);
-        console.log(`[API Service] Environment: ${this.environment}`);
-        console.log(`[API Service] Params:`, params);
+	async getBroadcast() {
+		const url = `${this.baseUrl}/broadcasts/${this.broadcastUid}`
+		console.log(url);
+		const response = await axios.get(url)
+		return response.data
+	}
 
-        // Simulate API call
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve({
-                    success: true,
-                    action,
-                    params,
-                    timestamp: new Date().toISOString(),
-                    message: `Successfully performed ${action}`
-                });
-            }, 500);
-        });
+	async getComponent(component) {
+		const url = `${this.baseUrl}/broadcasts/${this.broadcastUid}/controls/${component}`
+		const response = await axios.get(url)
+		return response.data
+	}
+
+	async toggleComponent(component) {
+		const url = `${this.baseUrl}/broadcasts/${this.broadcastUid}/controls/${component}/toggle`
+		const response = await axios.put(url)
+		return response.data
+	}
+
+	async selectLowerThird(player) {
+        const url = `${this.baseUrl}/broadcasts/${this.broadcastUid}/lower`
     }
 }
 
 // Export a function that creates and returns an instance of the ApiService
-module.exports = function(config) {
-    return new ApiService(config);
-};
+module.exports = function (config) {
+	return new ApiService(config)
+}
